@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace API_BaseDatos
+namespace ComercioAPI
 {
     public static class WebApiConfig
     {

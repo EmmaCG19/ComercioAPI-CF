@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1062
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API-BaseDatos", "API-BaseDatos\API-BaseDatos.csproj", "{1E9C485B-1DAD-4ECA-8F75-042646E874BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComercioAPI", "ComercioAPI\ComercioAPI.csproj", "{1E9C485B-1DAD-4ECA-8F75-042646E874BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
