@@ -9,8 +9,8 @@ namespace ComercioAPI.Models
     {
         public int VentaId { get; set; }
         public VendedorDTO Vendedor { get; set; }
-        public ProductoDTO Producto { get; set; }
         public DateTime FechaVenta { get; set; }
-
+        public List<DetalleVentaDTO> DetalleVenta { get; set; }
+        //public double Importe { get; set; } -- Campo calculado
     }
 }

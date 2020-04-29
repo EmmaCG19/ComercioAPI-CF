@@ -109,6 +109,7 @@
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\VendedoresController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
+    <Compile Include="DAL\DetalleVenta.cs" />
     <Compile Include="DAL\EcommerceDbContext.cs" />
     <Compile Include="DAL\EcommerceDbContextInitializer.cs" />
     <Compile Include="Global.asax.cs">
@@ -119,6 +120,7 @@
     <Compile Include="DAL\Vendedor.cs" />
     <Compile Include="DAL\Venta.cs" />
     <Compile Include="Models\CategoriaDTO.cs" />
+    <Compile Include="Models\DetalleVentaDTO.cs" />
     <Compile Include="Models\ProductoDTO.cs" />
     <Compile Include="Models\VendedorDTO.cs" />
     <Compile Include="Models\VentaDTO.cs" />

@@ -15,6 +15,6 @@ namespace ComercioAPI.DAL
         [MaxLength(50)]
         public string Descripcion { get; set; }
 
-        public virtual IEnumerable<Producto> Productos { get; set; }
+        public virtual ICollection<Producto> Productos { get; set; }
     }
 }

@@ -41,6 +41,9 @@ namespace ComercioAPI.Controllers
         [Route("")]
         public IHttpActionResult CargarCategoria(CategoriaDTO categoria)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             using (var context = new EcommerceDbContext())
             {
                 //Instanciando un objeto de la clase categoria
@@ -58,10 +61,10 @@ namespace ComercioAPI.Controllers
                     //Guardar el id de la categoria registrada
                     categoria.CategoriaId = catDB.CategoriaId;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    if (!ModelState.IsValid)
-                        return BadRequest(ModelState);
+                    return BadRequest(e.InnerException.InnerException.Message);
+                    
                 }
 
             }
@@ -130,12 +133,28 @@ namespace ComercioAPI.Controllers
             {
                 //Reutilizar este código en una función
                 categoria = context.Categorias
+                            .Include("Producto")
                             .Where(c => c.CategoriaId == categoriaId)
                             .Select(c => new CategoriaDTO()
                             {
                                 CategoriaId = c.CategoriaId,
-                                Nombre = c.Descripcion
+                                Nombre = c.Descripcion,
+                                Productos = c.Productos
+                                                     .Select(p => new ProductoDTO()
+                                                     {
+                                                         CodProducto = p.CodProducto,
+                                                         Descripcion = p.Descripcion,
+                                                         Precio = p.Precio,
+                                                         Stock = p.Stock,
 
+                                                     })
+                                                    .ToList<ProductoDTO>()
+
+
+
+                                                    //.Where(p => p.CategoriaId == c.CategoriaId)
+                                                    //.Select(p => new ProductoDTO() { CodProducto = p.CodProducto })
+                                                    //.ToList<ProductoDTO>()
                             }).FirstOrDefault<CategoriaDTO>();
             }
 
@@ -148,31 +167,31 @@ namespace ComercioAPI.Controllers
 
         //Obtener una categoria por nombre
         [Route("{nombreCategoria:alpha}")]
-        public Categoria GetCategoria(string nombreCategoria)
+        public IHttpActionResult GetCategoria(string nombreCategoria)
         {
             throw new NotImplementedException();
         }
 
         //Obtener los categorias de una categoria por id
         [HttpGet]
-        [Route("{categoriaId:int}/categorias")]
-        public IHttpActionResult ObtenercategoriasPorCategoria(int categoriaId)
+        [Route("{categoriaId:int}/productos")]
+        public IHttpActionResult ObtenerProductosPorCategoria(int categoriaId)
         {
             throw new NotImplementedException();
         }
 
         //Obtener los categorias de una categoria por nombre
         [HttpGet]
-        [Route("{nombreCategoria:alpha}/categorias")]
-        public IHttpActionResult ObtenercategoriasPorCategoria(string nombreCategoria)
+        [Route("{nombreCategoria:alpha}/productos")]
+        public IHttpActionResult ObtenerProductosPorCategoria(string nombreCategoria)
         {
             throw new NotImplementedException();
         }
 
         //Obtener el categoria más vendido de una categoria
         [HttpGet]
-        [Route("{categoriaId:int}/categorias/mas-vendido")]
-        public IHttpActionResult ObtenercategoriaMasVendidoPorCategoria(int categoriaId)
+        [Route("{categoriaId:int}/productos/mas-vendido")]
+        public IHttpActionResult ObtenerProductoMasVendidoPorCategoria(int categoriaId)
         {
             throw new NotImplementedException();
         }

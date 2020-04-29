@@ -36,10 +36,10 @@ namespace ComercioAPI.DAL
             //Debo calcular que cada venta realizada descuente el stock actual de cada producto
             var ventas = new List<Venta>()
             {
-                new Venta(){VentaId=1, CodProducto = 4, VendedorId=2, CantidadVendida = 300, FechaDeVenta = DateTime.Now.Date },
-                new Venta(){VentaId=1, CodProducto = 5, VendedorId=1, CantidadVendida = 600, FechaDeVenta = DateTime.Now.Date},
-                new Venta(){VentaId=2, CodProducto = 1, VendedorId=2, CantidadVendida = 300, FechaDeVenta = DateTime.Now.Date},
-                new Venta(){VentaId=2, CodProducto = 3, VendedorId=1, CantidadVendida = 300, FechaDeVenta = DateTime.Now.Date.Add(new TimeSpan(5,0,0,0))}
+                new Venta(){VendedorId=2, FechaDeVenta = DateTime.Now.Date},
+                new Venta(){VendedorId=1, FechaDeVenta = DateTime.Now.Date},
+                new Venta(){VendedorId=2, FechaDeVenta = DateTime.Now.Date},
+                new Venta(){VendedorId=1, FechaDeVenta = DateTime.Now.Date.Add(new TimeSpan(5,0,0,0))}
 
             };
 

@@ -25,7 +25,7 @@ namespace ComercioAPI.DAL
         public virtual Categoria Categoria { get; set; }
 
         //Un producto va a estar en varias ventas
-        public virtual IEnumerable<Venta> Ventas { get; set; }
+        public virtual ICollection<DetalleVenta> DetalleVentas { get; set; }
 
     }
 }

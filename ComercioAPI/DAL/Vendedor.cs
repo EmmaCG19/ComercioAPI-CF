@@ -23,6 +23,6 @@ namespace ComercioAPI.DAL
 
         public DateTime? FechaDeNacimiento { get; set; }
 
-        public virtual IEnumerable<Venta> Ventas { get; set; }
+        public virtual ICollection<Venta> Ventas { get; set; }
     }
 }

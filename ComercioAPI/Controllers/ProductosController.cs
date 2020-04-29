@@ -81,7 +81,7 @@ namespace ComercioAPI.Controllers
         //Devolver el producto con el nombre XXXX
         [HttpGet]
         [Route("{nombreProducto:alpha}")]
-        public ProductoDTO GetProductoPorNombre(string nombreProducto)
+        public IHttpActionResult GetProductoPorNombre(string nombreProducto)
         {
             throw new NotImplementedException();
         }
@@ -91,6 +91,9 @@ namespace ComercioAPI.Controllers
         [Route("")]
         public IHttpActionResult CargarProducto(ProductoDTO producto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             using (var context = new EcommerceDbContext())
             {
                 //Instanciando un objeto de la clase Producto
@@ -109,10 +112,9 @@ namespace ComercioAPI.Controllers
                     context.SaveChanges();
                     producto.CodProducto = prodDB.CodProducto;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    if (!ModelState.IsValid)
-                        return BadRequest(ModelState);
+                    return BadRequest(e.InnerException.InnerException.Message);
                 }
 
 
@@ -175,7 +177,7 @@ namespace ComercioAPI.Controllers
         //Obtener los productos mas vendidos
         [HttpGet]
         [Route("mas-vendidos")]
-        public List<ProductoDTO> ObtenerProductosMasVendidos()
+        public IHttpActionResult ObtenerProductosMasVendidos()
         {
             throw new NotImplementedException();
         }
@@ -183,7 +185,7 @@ namespace ComercioAPI.Controllers
         //Obtener los productos menos vendidos
         [HttpGet]
         [Route("menos-vendidos")]
-        public List<ProductoDTO> ObtenerProductosMenosVendidos()
+        public IHttpActionResult ObtenerProductosMenosVendidos()
         {
             throw new NotImplementedException();
 

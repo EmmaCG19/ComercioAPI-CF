@@ -17,10 +17,10 @@ namespace ComercioAPI.DAL
             //Database.SetInitializer<EcommerceDbContext>(new DropCreateDatabaseAlways<EcommerceDbContext>());
 
             //En produccion:
-            Database.SetInitializer<EcommerceDbContext>(null);
+            //Database.SetInitializer<EcommerceDbContext>(null);
 
             //Customizado:
-            //Database.SetInitializer<EcommerceDbContext>(new EcommerceDbContextInitializer());
+            Database.SetInitializer<EcommerceDbContext>(new EcommerceDbContextInitializer());
 
         }
 
@@ -28,6 +28,7 @@ namespace ComercioAPI.DAL
         public DbSet<Vendedor> Vendedores { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Venta> Ventas { get; set; }
+        public DbSet<DetalleVenta> DetalleVentas { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
