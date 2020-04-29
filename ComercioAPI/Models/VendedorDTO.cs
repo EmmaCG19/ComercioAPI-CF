@@ -10,6 +10,5 @@ namespace ComercioAPI.Models
     {
         public int VendedorId { get; set; }
         public string Nombre { get; set; }
-
     }
 }

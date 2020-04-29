@@ -15,9 +15,12 @@ namespace ComercioAPI.DAL
             //Database.SetInitializer<EcommerceDbContext>(new CreateDatabaseIfNotExists<EcommerceDbContext>());
             //Database.SetInitializer<EcommerceDbContext>(new DropCreateDatabaseIfModelChanges<EcommerceDbContext>());
             //Database.SetInitializer<EcommerceDbContext>(new DropCreateDatabaseAlways<EcommerceDbContext>());
-            //En produccion: Database.SetInitializer<EcommerceDbContext>(null);
+
+            //En produccion:
+            Database.SetInitializer<EcommerceDbContext>(null);
+
             //Customizado:
-            Database.SetInitializer<EcommerceDbContext>(new EcommerceDbContextInitializer());
+            //Database.SetInitializer<EcommerceDbContext>(new EcommerceDbContextInitializer());
 
         }
 
@@ -30,6 +33,13 @@ namespace ComercioAPI.DAL
         {
             //Elimina la pluralización de las entidades por convención
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            //Adding composite key with Fluent API
+            //modelBuilder.Entity<Venta>()
+            //                            .HasKey(v => v.VentaId)
+            //                            .HasKey(v => v.CodProducto);
+
+
             base.OnModelCreating(modelBuilder);
 
         }

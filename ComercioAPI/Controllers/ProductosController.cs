@@ -30,6 +30,7 @@ namespace ComercioAPI.Controllers
                                                 Categoria = p.CategoriaId == null ? null :
                                                     new CategoriaDTO()
                                                     {
+                                                        CategoriaId = p.Categoria.CategoriaId,
                                                         Nombre = p.Categoria.Descripcion
                                                     }
                                             })
@@ -45,10 +46,10 @@ namespace ComercioAPI.Controllers
 
         //Devolver el producto con el codigo XXXX
         [Route("{codProducto:int:min(1)}")]
-        public IHttpActionResult GetProductoPorId(int codProducto)
+        public IHttpActionResult GetProductoPorCodigo(int codProducto)
         {
             if (codProducto <= 0)
-                return BadRequest();
+                return BadRequest("El código de producto ingresado es inválido");
 
             ProductoDTO producto = null;
             using (EcommerceDbContext context = new EcommerceDbContext())
@@ -60,6 +61,7 @@ namespace ComercioAPI.Controllers
                             {
                                 CodProducto = p.CodProducto,
                                 Descripcion = p.Descripcion,
+                                Precio = p.Precio,
                                 Stock = p.Stock,
                                 Categoria = p.CategoriaId == null ? null : new CategoriaDTO()
                                 {
@@ -87,49 +89,87 @@ namespace ComercioAPI.Controllers
         //Dar de alta un producto
         [HttpPost]
         [Route("")]
-        public void CargarProducto()
+        public IHttpActionResult CargarProducto(ProductoDTO producto)
         {
-            HttpResponseMessage mensaje = new HttpResponseMessage();
-
             using (var context = new EcommerceDbContext())
             {
-                //try
-                //{
-                //    context.Productos.Add(producto);
-                //    context.SaveChanges();
+                //Instanciando un objeto de la clase Producto
+                try
+                {
 
-                //    mensaje.StatusCode = HttpStatusCode.OK;
-                //    mensaje.Content = new StringContent("El producto fue cargado exitosamente");
-                //}
-                //catch (Exception e)
-                //{
+                    var prodDB = new Producto()
+                    {
+                        Descripcion = producto.Descripcion,
+                        Stock = producto.Stock,
+                        CategoriaId = producto.Categoria.CategoriaId,
+                    };
 
-                //    mensaje.StatusCode = HttpStatusCode.NotAcceptable;
-                //    mensaje.Content = new StringContent(String.Format("El producto no pudo ser cargado. Excepción {0}", e.Message));
-                //}
 
-                //return mensaje;
+                    context.Productos.Add(prodDB);
+                    context.SaveChanges();
+                    producto.CodProducto = prodDB.CodProducto;
+                }
+                catch (Exception)
+                {
+                    if (!ModelState.IsValid)
+                        return BadRequest(ModelState);
+                }
 
-                var p = new Producto() { Descripcion = "zapatos", Precio = 1500, Stock = 20 };
-                context.Productos.Add(p);
-                context.SaveChanges();
+
             }
+
+            //Retornar un objeto de la clase ProductoDTO con el id generado
+            return Ok(producto);
         }
 
         //Eliminar producto por id
         [HttpDelete]
-        [Route("{codProducto:int}")]
-        public HttpResponseMessage EliminarProducto(int codProducto)
+        [Route("{codProducto:int:min(1)}")]
+        public IHttpActionResult EliminarProducto(int codProducto)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            using (var context = new EcommerceDbContext())
+            {
+                Producto prod = context.Productos.Find(codProducto);
+
+                if (prod == null)
+                    return NotFound();
+
+                context.Productos.Remove(prod);
+                context.SaveChanges();
+            }
+
+            return Ok(codProducto);
         }
 
         //Actualizar producto
         [HttpPut]
         [Route("")]
-        public HttpResponseMessage ActualizarProducto(ProductoDTO producto)
+        public IHttpActionResult ActualizarProducto(ProductoDTO producto)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            using (var context = new EcommerceDbContext())
+            {
+                Producto prodDB = context.Productos.Find(producto.CodProducto);
+
+                if (prodDB == null)
+                    return NotFound();
+
+                //Modifico los campos con los datos por parámetro
+                prodDB.Descripcion = producto.Descripcion;
+                prodDB.Stock = producto.Stock;
+                prodDB.Precio = producto.Precio;
+                prodDB.CategoriaId = producto.Categoria.CategoriaId;
+
+                context.SaveChanges();
+
+            }
+
+            return Ok(producto.CodProducto);
         }
 
         //Obtener los productos mas vendidos

@@ -9,20 +9,23 @@ namespace ComercioAPI.DAL
 {
     [Table("Ventas")]
     public class Venta
+        //VentaId se va a repetir varias veces por cada producto que se haya vendido en la misma, por lo que no puede ser PK
     {
+        [Key]
+        [Column(Order = 1)]
         public int VentaId { get; set; }
-       
+
+        [Key]
+        [Column(Order = 2)]
+        public int CodProducto { get; set; }
+        public virtual Producto Producto { get; set; }
+
         [Required]
         public int VendedorId { get; set; }
         public virtual Vendedor Vendedor { get; set; }
 
-        [Required]
-        public int CodProducto { get; set; }
-        public virtual Producto Producto { get; set; }
-
         public DateTime FechaDeVenta { get; set; }
 
-        //Data validation customizada para que la cantidad vendida no supere el stock del producto
         public int CantidadVendida { get; set; }
     }
 }

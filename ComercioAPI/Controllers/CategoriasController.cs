@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ComercioAPI.DAL;
+using ComercioAPI.Models;
 
 namespace ComercioAPI.Controllers
 {
@@ -13,43 +14,136 @@ namespace ComercioAPI.Controllers
     {
         //Mostrar todas las categorias
         [Route("")]
-        public List<Categoria> GetAllCategorias()
+        public IHttpActionResult GetAllCategorias()
         {
-            throw new NotImplementedException();
+            List<CategoriaDTO> categorias = new List<CategoriaDTO>();
+            using (EcommerceDbContext context = new EcommerceDbContext())
+            {
+                categorias = context.Categorias
+                                            .Select(c => new CategoriaDTO()
+                                            {
+                                                CategoriaId= c.CategoriaId,
+                                                Nombre = c.Descripcion
+                                            })
+                                            .ToList();
+
+            }
+
+            if (categorias.Count == 0)
+                return NotFound();
+
+            return Ok(categorias);
 
         }
 
         //Dar de alta a una categoria
         [HttpPost]
         [Route("")]
-        public HttpResponseMessage CargarCategoria(Categoria categoria)
+        public IHttpActionResult CargarCategoria(CategoriaDTO categoria)
         {
-            throw new NotImplementedException();
+            using (var context = new EcommerceDbContext())
+            {
+                //Instanciando un objeto de la clase categoria
+                try
+                {
+                    var catDB = new Categoria()
+                    {
+                        Descripcion = categoria.Nombre
+
+                    };
+
+                    context.Categorias.Add(catDB);
+                    context.SaveChanges();
+
+                    //Guardar el id de la categoria registrada
+                    categoria.CategoriaId = catDB.CategoriaId;
+                }
+                catch (Exception)
+                {
+                    if (!ModelState.IsValid)
+                        return BadRequest(ModelState);
+                }
+
+            }
+
+            return Ok(categoria);
+
         }
        
         //Eliminar una categoria por id
         [HttpDelete]
-        [Route("{categoriaId:int}")]
-        public HttpResponseMessage EliminarCategoria(int categoriaId)
+        [Route("{categoriaId:int:min(1)}")]
+        public IHttpActionResult EliminarCategoria(int categoriaId)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            using (var context = new EcommerceDbContext())
+            {
+                Categoria catDB = context.Categorias.Find(categoriaId);
+
+                if (catDB == null)
+                    return NotFound();
+
+                context.Categorias.Remove(catDB);
+                context.SaveChanges();
+            }
+
+            return Ok(categoriaId);
         }
 
-       
         //Actualizar una categoria
         [HttpPut]
         [Route("")]
-        public HttpResponseMessage ActualizarCategoria(Categoria categoria)
+        public IHttpActionResult ActualizarCategoria(Categoria categoria)
         {
-            throw new NotImplementedException();
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            using (var context = new EcommerceDbContext())
+            {
+                Categoria catDB = context.Categorias.Find(categoria.CategoriaId);
+
+                if (catDB == null)
+                    return NotFound();
+
+                //Modifico los campos con los datos por parámetro
+                catDB.Descripcion = categoria.Descripcion;
+
+                context.SaveChanges();
+
+            }
+
+            return Ok(categoria.CategoriaId);
+
+        }
         
         //Obtener una categoria por Id
-        [Route("{categoriaId:int}")]
-        public Categoria GetCategoria(int categoriaId)
+        [Route("{categoriaId:int:min(1)}")]
+        public IHttpActionResult GetCategoriaPorId(int categoriaId)
         {
-            throw new NotImplementedException();
+            if (categoriaId <= 0)
+                return BadRequest("El id ingresado es inválido");
+
+            CategoriaDTO categoria = null;
+            using (EcommerceDbContext context = new EcommerceDbContext())
+            {
+                //Reutilizar este código en una función
+                categoria = context.Categorias
+                            .Where(c => c.CategoriaId == categoriaId)
+                            .Select(c => new CategoriaDTO()
+                            {
+                                CategoriaId = c.CategoriaId,
+                                Nombre = c.Descripcion
+
+                            }).FirstOrDefault<CategoriaDTO>();
+            }
+
+            if (categoria == null)
+                return NotFound();
+
+            return Ok(categoria);
+
         }
 
         //Obtener una categoria por nombre
@@ -59,26 +153,26 @@ namespace ComercioAPI.Controllers
             throw new NotImplementedException();
         }
 
-        //Obtener los productos de una categoria por id
+        //Obtener los categorias de una categoria por id
         [HttpGet]
-        [Route("{categoriaId:int}/productos")]
-        public List<Producto> ObtenerProductosPorCategoria(int categoriaId)
+        [Route("{categoriaId:int}/categorias")]
+        public IHttpActionResult ObtenercategoriasPorCategoria(int categoriaId)
         {
             throw new NotImplementedException();
         }
 
-        //Obtener los productos de una categoria por nombre
+        //Obtener los categorias de una categoria por nombre
         [HttpGet]
-        [Route("{nombreCategoria:alpha}/productos")]
-        public List<Producto> ObtenerProductosPorCategoria(string nombreCategoria)
+        [Route("{nombreCategoria:alpha}/categorias")]
+        public IHttpActionResult ObtenercategoriasPorCategoria(string nombreCategoria)
         {
             throw new NotImplementedException();
         }
 
-        //Obtener el producto más vendido de una categoria
+        //Obtener el categoria más vendido de una categoria
         [HttpGet]
-        [Route("{categoriaId:int}/productos/mas-vendido")]
-        public Producto ObtenerProductoMasVendidoPorCategoria(int categoriaId)
+        [Route("{categoriaId:int}/categorias/mas-vendido")]
+        public IHttpActionResult ObtenercategoriaMasVendidoPorCategoria(int categoriaId)
         {
             throw new NotImplementedException();
         }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ComercioAPI.DAL;
+using ComercioAPI.Models;
 
 namespace ComercioAPI.Controllers
 {
